@@ -1,0 +1,9 @@
+.\os_periodictasks.o: OS_PeriodicTasks.c
+.\os_periodictasks.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\os_periodictasks.o: OS_PeriodicTasks.h
+.\os_periodictasks.o: OS.h
+.\os_periodictasks.o: OS_Time.h
+.\os_periodictasks.o: SensorInstructions.h
+.\os_periodictasks.o: UART.h
+.\os_periodictasks.o: ..\inc/tm4c123gh6pm.h
+.\os_periodictasks.o: ST7735.h

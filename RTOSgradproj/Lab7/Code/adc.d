@@ -1,0 +1,9 @@
+.\adc.o: ADC.c
+.\adc.o: ADC.h
+.\adc.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\adc.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
+.\adc.o: ../inc/tm4c123gh6pm.h
+.\adc.o: OS.h
+.\adc.o: OS_PeriodicTasks.h
+.\adc.o: OS_Time.h
+.\adc.o: SensorInstructions.h

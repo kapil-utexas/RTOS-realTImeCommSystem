@@ -1,0 +1,9 @@
+.\os_switch.o: OS_Switch.c
+.\os_switch.o: OS_Switch.h
+.\os_switch.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\os_switch.o: OS.h
+.\os_switch.o: OS_PeriodicTasks.h
+.\os_switch.o: OS_Time.h
+.\os_switch.o: SensorInstructions.h
+.\os_switch.o: ../inc/tm4c123gh6pm.h
+.\os_switch.o: Ping.h

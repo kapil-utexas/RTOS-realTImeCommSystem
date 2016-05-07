@@ -1,0 +1,9 @@
+.\ping.o: Ping.c
+.\ping.o: Ping.h
+.\ping.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\ping.o: ../inc/tm4c123gh6pm.h
+.\ping.o: OS.h
+.\ping.o: OS_PeriodicTasks.h
+.\ping.o: OS_Time.h
+.\ping.o: SensorInstructions.h
+.\ping.o: Fifo.h

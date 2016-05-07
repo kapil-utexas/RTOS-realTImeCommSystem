@@ -1,0 +1,11 @@
+.\uart.o: UART.c
+.\uart.o: ../inc/tm4c123gh6pm.h
+.\uart.o: FIFO.h
+.\uart.o: UART.h
+.\uart.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\uart.o: OS.h
+.\uart.o: OS_PeriodicTasks.h
+.\uart.o: OS_Time.h
+.\uart.o: SensorInstructions.h
+.\uart.o: C:\Keil\ARM\ARMCC\bin\..\include\stdarg.h
+.\uart.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h

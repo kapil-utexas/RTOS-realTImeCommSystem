@@ -1,0 +1,14 @@
+.\os.o: OS.c
+.\os.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\os.o: OS.h
+.\os.o: OS_PeriodicTasks.h
+.\os.o: OS_Time.h
+.\os.o: SensorInstructions.h
+.\os.o: OS_Switch.h
+.\os.o: PLL.h
+.\os.o: ..\inc/tm4c123gh6pm.h
+.\os.o: FIFO.h
+.\os.o: Heartbeat.h
+.\os.o: OS_Shared.h
+.\os.o: ST7735.h
+.\os.o: UART.h

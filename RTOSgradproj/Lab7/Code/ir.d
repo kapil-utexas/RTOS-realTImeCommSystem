@@ -1,0 +1,12 @@
+.\ir.o: IR.c
+.\ir.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\ir.o: UART.h
+.\ir.o: OS.h
+.\ir.o: OS_PeriodicTasks.h
+.\ir.o: OS_Time.h
+.\ir.o: SensorInstructions.h
+.\ir.o: Fifo.h
+.\ir.o: IR.h
+.\ir.o: ..\inc/tm4c123gh6pm.h
+.\ir.o: ADC.h
+.\ir.o: LinearInterpolation.h
