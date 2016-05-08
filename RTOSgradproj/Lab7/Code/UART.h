@@ -46,12 +46,14 @@ void UART_Init(void);
 // Input: none
 // Output: ASCII code for key typed
 char UART_InChar(void);
-
+char UART_InCharNonBlock(void);
 //------------UART_OutChar------------
 // Output 8-bit to serial port
 // Input: letter is an 8-bit ASCII character to be transferred
 // Output: none
 void UART_OutChar(char data);
+void UART_OutCharNonBlock(char data);
+
 
 //------------UART_OutString------------
 // Output String (NULL termination)
@@ -117,3 +119,4 @@ void UART_NewLine(void);
 // printf used for UART.
 // Handles formatting
 void UART_printf(const char * format, ...);
+

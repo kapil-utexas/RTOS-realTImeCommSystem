@@ -75,6 +75,9 @@ void WaitForInterrupt(void);  // low power mode
 AddIndexFifo(URx, FIFOSIZE, char, FIFOSUCCESS, FIFOFAIL)
 AddIndexFifo(UTx, FIFOSIZE, char, FIFOSUCCESS, FIFOFAIL)
 
+//AddIndexFifo(Rx, FIFOSIZE, char, FIFOSUCCESS, FIFOFAIL)
+//AddIndexFifo(Tx, FIFOSIZE, char, FIFOSUCCESS, FIFOFAIL)
+
 Sema4Type RxDataAvailable;
 Sema4Type TxRoomLeft;
 Sema4Type RxMutex;
@@ -135,6 +138,18 @@ void static copySoftwareToHardware(void){
     OS_Signal(&TxRoomLeft);        // Use for semaphore 
   }
 }
+//------------UART_InCharNonBlock------------
+// input ASCII character from UART
+// output: 0 if RxFifo is empty
+//         character if
+//char UART_InCharNonBlock(void){
+//  char letter;
+//  if(RxFifo_Get(&letter) == FIFOFAIL){
+//    return 0;  // empty
+//  };
+//  return(letter);
+//}
+
 // input ASCII character from UART
 // spin if RxFifo is empty
 char UART_InChar(void){
@@ -154,6 +169,18 @@ void UART_OutChar(char data){
   copySoftwareToHardware();
   UART0_IM_R |= UART_IM_TXIM;           // enable TX FIFO interrupt
 }
+
+//------------UART_OutCharNonBlock------------
+// non blocking output ASCII character to UART
+// Input: letter is an 8-bit ASCII character to be transferred
+// Output: none
+// Error: return with lost data if TxFifo is full
+//void UART_OutCharNonBlock(char data){
+//  if(TxFifo_Put(data) == FIFOFAIL) return; // lost data
+//  UART0_IM_R &= ~UART_IM_TXIM;          // disable TX FIFO interrupt
+//  copySoftwareToHardware();
+//  UART0_IM_R |= UART_IM_TXIM;           // enable TX FIFO interrupt
+//}
 // at least one of three things has happened:
 // hardware TX FIFO goes from 3 to 2 or less items
 // hardware RX FIFO goes from 1 to 2 or more items
@@ -366,3 +393,5 @@ void UART_printf(const char * format, ...) {
   va_end(args);
   UART_OutString(buffer);
 }
+
+

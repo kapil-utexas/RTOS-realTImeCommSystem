@@ -58,7 +58,7 @@ ESP8266    TM4C123
 // Access point parameters
 #define SSID_NAME  "Kapil's iPhone"
 #define PASSKEY    "stringtheory"
-//#define SEC_TYPE  ESP8266_ENCRYPT_MODE_WPA2_PSK	
+#define SEC_TYPE  ESP8266_ENCRYPT_MODE_WPA2_PSK	
 
 #define BUFFER_SIZE 1024
 #define MAXTRY 10
@@ -281,7 +281,7 @@ void ESP8266FIFOtoBuffer(void){
   while((UART2_FR_R&UART_FR_RXFE) == 0){
     letter = UART2_DR_R;        // retrieve char from FIFO
     if(ESP8266_EchoResponse){
-//      UART_OutCharNonBlock(letter); // echo
+  //    UART_OutCharNonBlock(letter); // echo
 	      UART_OutChar(letter); // echo
     }
     if(RXBufferIndex >= BUFFER_SIZE){
@@ -355,43 +355,38 @@ void ESP8266_Init(uint32_t baud){
   ServerResponseSearchFinished = 0;
   EnableInterrupts();
 // step 1: AT+RST reset module
-  printf("ESP8266 Initialization:\n\r");
+  UART_printf("ESP8266 Initialization:\n\r");
   ESP8266_EchoResponse = true; // debugging
   if(ESP8266_Reset()==0){ 
-    printf("Reset failure, could not reset\n\r"); while(1){};
+    UART_printf("Reset failure, could not reset\n\r"); while(1){};
   }
-//  ESP8266SendCommand("AT+UART_CUR=115200,8,1,0,0\r\n");
-//  UART_InChar();
-
-//  ESP8266_InitUART(115200,true);
-  ESP8266_ListAccessPoints();
+ // ESP8266_ListAccessPoints();
 // step 2: AT+CWMODE=1 set wifi mode to client (not an access point)
 //  if(ESP8266_SetWifiMode(ESP8266_WIFI_MODE_CLIENT)==0){ 
-//    printf("SetWifiMode, could not set mode\n\r"); while(1){};
+//    UART_printf("SetWifiMode, could not set mode\n\r"); while(1){};
 //  }
 // step 3: AT+CWJAP="ValvanoAP","12345678"  connect to access point 
   if(ESP8266_JoinAccessPoint(SSID_NAME,PASSKEY)==0){ 
-    printf("JoinAccessPoint error, could not join AP\n\r"); while(1){};
+    UART_printf("JoinAccessPoint error, could not join AP\n\r"); while(1){};
   }
 // optional step: AT+CIFSR check to see our IP address
   if(ESP8266_GetIPAddress()==0){ // data streamed to UART0, OK
-    printf("GetIPAddress error, could not get IP address\n\r"); while(1){};
+    UART_printf("GetIPAddress error, could not get IP address\n\r"); while(1){};
   } 
 //// optional step: AT+CIPMUX==0 set mode to single socket 
-//  if(ESP8266_SetConnectionMux(0)==0){ // single socket
-//    printf("SetConnectionMux error, could not set connection mux\n\r"); while(1){};
-//  } 
+  if(ESP8266_SetConnectionMux(0)==0){ // single socket-0, web server - 1,
+    UART_printf("SetConnectionMux error, could not set connection mux\n\r"); while(1){};
+  } 
 // optional step: AT+CWLAP check to see other AP in area
-  if(ESP8266_ListAccessPoints()==0){ 
-    printf("ListAccessPoints, could not list access points\n\r"); while(1){};
-  }
+  //if(ESP8266_ListAccessPoints()==0){ 
+   // UART_printf("ListAccessPoints, could not list access points\n\r"); while(1){};
+  //}
+	  //ESP8266_EnableServer(80); //setup a server on port 80 
 // step 4: AT+CIPMODE=0 set mode to not data mode
   if(ESP8266_SetDataTransmissionMode(0)==0){ 
-    printf("SetDataTransmissionMode, could not make connection\n\r"); while(1){};
-  }
   ESP8266_InputProcessingEnabled = false; // not a server
+	}
 }
-
 //----------ESP8266_Reset------------
 // resets the esp8266 module
 // input:  none
@@ -720,7 +715,7 @@ void ESP8266ProcessInput(const char* buffer){
     if (*ptr == 'G' && *(ptr + 1) == 'E' && *(ptr + 2) == 'T') {
       if (*(ptr + 5) == '?'){ // means data to process
         char* messagePtr = strstr(ptr, "message=") + 8;
-        printf("Message from ESP8266: %s\n", messagePtr);
+        UART_printf("Message from ESP8266: %s\n", messagePtr);
       }
       ESP8266_PageRequested = true;
     } else {
@@ -769,4 +764,16 @@ void HTTP_ServePage(const char* body){
   ESP8266SendCommand(header);
   ESP8266SendCommand(contentLength);
   ESP8266SendCommand(body);    
+}
+
+void ESP8266_SendClientResponse(const char* body){
+  sprintf((char*)TXBuffer, "AT+CIPSEND=%d,%d\r\n", 0, strlen(body) );
+  ESP8266SendCommand((const char*)TXBuffer);
+	DelayMs(100);
+  sprintf((char*)TXBuffer, "%s\r\n", body );
+
+  ESP8266SendCommand((const char*)TXBuffer);
+DelayMs(100);
+	    ESP8266SendCommand("AT+CIPCLOSE\r\n");   
+
 }

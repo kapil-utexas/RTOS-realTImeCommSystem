@@ -12,3 +12,4 @@
 .\os.o: OS_Shared.h
 .\os.o: ST7735.h
 .\os.o: UART.h
+.\os.o: esp8266.h

@@ -422,36 +422,58 @@ void MotorProcessor(void) {
 //#endif
 
 // prototypes for functions defined in startup.s
-void DisableInterrupts(void); // Disable interrupts
-void EnableInterrupts(void);  // Enable interrupts
-long StartCritical (void);    // previous I bit, disable interrupts
-void EndCritical(long sr);    // restore I bit to previous value
-void WaitForInterrupt(void);  // low power mode
+//void DisableInterrupts(void); // Disable interrupts
+//void EnableInterrupts(void);  // Enable interrupts
+//long StartCritical (void);    // previous I bit, disable interrupts
+//void EndCritical(long sr);    // restore I bit to previous value
+//void WaitForInterrupt(void);  // low power mode
+char Fetch[] = "GET /data/2.5/weather?q=Austin%20Texas&APPID=e0493977c4479cee13a011dc229cf26c HTTP/1.1\r\nHost:api.openweathermap.org\r\n\r\n";
 
-char Fetch[] = "GET /data/2.5/weather?q=Austin%20Texas&APPID=96da9845b4ae82becf84f120782f4b69 HTTP/1.1\r\nHost:api.openweathermap.org\r\n\r\n";
-// 1) go to http://openweathermap.org/appid#use 
-// 2) Register on the Sign up page
-// 3) get an API key (APPID) replace the 1234567890abcdef1234567890abcdef with your APPID
-
-int main(void){  
-  DisableInterrupts();
-  PLL_Init(Bus80MHz);
-  LED_Init();  
-  Output_Init();       // UART0 only used for debugging
-  printf("\n\r-----------\n\rSystem starting...\n\r");
-  ESP8266_Init(115200);  // connect to access point, set up as client
-  ESP8266_GetVersionNumber();
-	
-  while(1){
+void doTCP(){
     ESP8266_GetStatus();
-    if(ESP8266_MakeTCPConnection("openweathermap.org")){ // open socket in server
+    if( ESP8266_MakeTCPConnection("openweathermap.org") ){ // open socket in server
       LED_GreenOn();
+			 UART_printf("\n\r-----------\n\rSystem starting...\n\r");
       ESP8266_SendTCP(Fetch);
+//			//HTTP_ServePage("AWESOME!!!!");
+			// ESP8266_SendClientResponse("AWESOME!!!!");
     }
     ESP8266_CloseTCPConnection();
     while(Board_Input()==0){// wait for touch
     }; 
     LED_GreenOff();
-    LED_RedToggle();
-  }
+    //LED_RedToggle();
+	 
+	}
+// 1) go to http://openweathermap.org/appid#use 
+// 2) Register on the Sign up page
+// 3) get an API key (APPID) replace the 1234567890abcdef1234567890abcdef with your APPID
+
+int main(void){
+  OS_Init();
+//  IR_Init();
+//  Ping_Init();
+
+//  // TODO - Change the priorities later
+//  #if DEBUG == 1
+    //ST7735_SInit();
+  LED_Init();
+
+	//  #endif
+//  OS_MailBox_Init();
+  OS_AddThread(&doTCP, 128, 1);
+	//  OS_AddThread(&ProcessSensors, 128, 1);  
+////  OS_AddThread(&Interpreter, 128, 1);
+  OS_Launch(TIMESLICE);
+  
+  //DisableInterrupts();
+  //PLL_Init(Bus80MHz);
+	//OS_AddThread(&CANSensorSendThread, 128, 1);	
+  
+	//Output_Init();       // UART0 only used for debugging
+  //printf("\n\r-----------\n\rSystem starting...\n\r");
+ // ESP8266_Init(115200);  // connect to access point, set up as client
+  //ESP8266_GetVersionNumber();
+	
+
 }

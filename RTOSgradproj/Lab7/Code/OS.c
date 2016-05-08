@@ -32,6 +32,7 @@
 #include "OS_Shared.h"
 #include "ST7735.h"
 #include "UART.h"
+#include "esp8266.h"
 
 #define NVIC_ST_CTRL_R          (*((volatile uint32_t *)0xE000E010))
 #define NVIC_ST_CTRL_CLK_SRC    0x00000004  // Clock Source
@@ -302,13 +303,18 @@ void OS_Init(void){
   for (int i = 0; i < NUM_PRIORITIES; ++i) {
     ActiveThreads[i] = 0;
   }
-  
+		
   PLL_Init(Bus80MHz);         // set processor clock to 80 MHz
-  OS_SwitchInit();
+  UART_Init();
+	OS_SwitchInit();
   HeartBeat_Init();
   HardBeat_Init();
+	//init wifi module  
+	ESP8266_Init(115200);  // connect to access point, set up as client
+  ESP8266_GetVersionNumber();
+		//ESP8266_Init(115200);
+
   //ST7735_SInit();
-  UART_Init();
   NVIC_ST_CTRL_R = 0;         // disable SysTick during setup
   NVIC_ST_CURRENT_R = 0;      // any write to current clears it
   NVIC_SYS_PRI3_R =(NVIC_SYS_PRI3_R&0x00FFFFFF)|0xE0000000; // priority 7
