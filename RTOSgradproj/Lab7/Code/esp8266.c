@@ -55,10 +55,12 @@ ESP8266    TM4C123
 #include "inc/tm4c123gh6pm.h"
 #include "esp8266.h"
 #include "UART.h"
-// Access point parameters
+ //Access point parameters
 #define SSID_NAME  "Kapil's iPhone"
+//#define SSID_NAME  "YangShaoiPhone"
 #define PASSKEY    "stringtheory"
-#define SEC_TYPE  ESP8266_ENCRYPT_MODE_WPA2_PSK	
+//#define PASSKEY    "shao3713"
+#define SEC_TYPE ESP8266_ENCRYPT_MODE_WPA2_PSK	
 
 #define BUFFER_SIZE 1024
 #define MAXTRY 10
@@ -365,23 +367,33 @@ void ESP8266_Init(uint32_t baud){
 //  if(ESP8266_SetWifiMode(ESP8266_WIFI_MODE_CLIENT)==0){ 
 //    UART_printf("SetWifiMode, could not set mode\n\r"); while(1){};
 //  }
+	  if(ESP8266_ListAccessPoints()==0){ 
+    UART_printf("ListAccessPoints, could not list access points\n\r"); while(1){};
+  }
+
 // step 3: AT+CWJAP="ValvanoAP","12345678"  connect to access point 
   if(ESP8266_JoinAccessPoint(SSID_NAME,PASSKEY)==0){ 
     UART_printf("JoinAccessPoint error, could not join AP\n\r"); while(1){};
   }
-// optional step: AT+CIFSR check to see our IP address
-  if(ESP8266_GetIPAddress()==0){ // data streamed to UART0, OK
-    UART_printf("GetIPAddress error, could not get IP address\n\r"); while(1){};
-  } 
+ 
 //// optional step: AT+CIPMUX==0 set mode to single socket 
   if(ESP8266_SetConnectionMux(0)==0){ // single socket-0, web server - 1,
     UART_printf("SetConnectionMux error, could not set connection mux\n\r"); while(1){};
   } 
-// optional step: AT+CWLAP check to see other AP in area
-  //if(ESP8266_ListAccessPoints()==0){ 
-   // UART_printf("ListAccessPoints, could not list access points\n\r"); while(1){};
-  //}
-	  //ESP8266_EnableServer(80); //setup a server on port 80 
+// optional step: AT+CIFSR check to see our IP address
+  if(ESP8266_GetIPAddress()==0){ // data streamed to UART0, OK
+    UART_printf("GetIPAddress error, could not get IP address\n\r"); while(1){};
+  }
+	// optional step: AT+CWLAP check to see other AP in area
+//  if(ESP8266_ListAccessPoints()==0){ 
+//    UART_printf("ListAccessPoints, could not list access points\n\r"); while(1){};
+//  }
+	  //ESP8266_EnableServer(8080); //setup a server on port 80 
+	//DelayMs(1000);
+	//ESP8266SendCommand("AT+CWDHCP=1,1\r\n");
+	//DelayMs(1000);
+		//ESP8266SendCommand("AT+CIPSTA?\r\n");
+	//DelayMs(1000);
 // step 4: AT+CIPMODE=0 set mode to not data mode
   if(ESP8266_SetDataTransmissionMode(0)==0){ 
   ESP8266_InputProcessingEnabled = false; // not a server
@@ -767,13 +779,28 @@ void HTTP_ServePage(const char* body){
 }
 
 void ESP8266_SendClientResponse(const char* body){
-  sprintf((char*)TXBuffer, "AT+CIPSEND=%d,%d\r\n", 0, strlen(body) );
+  sprintf((char*)TXBuffer, "AT+CIPSEND=%d\r\n", strlen(body) );
   ESP8266SendCommand((const char*)TXBuffer);
 	DelayMs(100);
   sprintf((char*)TXBuffer, "%s\r\n", body );
+	ESP8266SendCommand((const char*)TXBuffer);
+DelayMs(300);
+	
+	    ESP8266SendCommand("AT+CIPCLOSE\r\n");  
+DelayMs(100);	
+UART_printf("\n\r-----------\n\rPacket Sent...\n\r");
+}
 
-  ESP8266SendCommand((const char*)TXBuffer);
-DelayMs(100);
-	    ESP8266SendCommand("AT+CIPCLOSE\r\n");   
-
+void MakeTCPConnection(char *IPaddress){
+  //int try=MAXTRY;
+  //SearchStart("ok");
+  //while(try){
+    sprintf((char*)TXBuffer, "AT+CIPSTART=\"TCP\",\"%s\",8080\r\n", IPaddress);
+    ESP8266SendCommand(TXBuffer);   // open and connect to a socket
+    DelayMs(8000);
+	
+   // if(SearchFound) return 1; // success
+   //try--;
+  //}
+  //return 0; // fail
 }

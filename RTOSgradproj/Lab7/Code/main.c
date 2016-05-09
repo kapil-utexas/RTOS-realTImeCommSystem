@@ -428,22 +428,40 @@ void MotorProcessor(void) {
 //void EndCritical(long sr);    // restore I bit to previous value
 //void WaitForInterrupt(void);  // low power mode
 char Fetch[] = "GET /data/2.5/weather?q=Austin%20Texas&APPID=e0493977c4479cee13a011dc229cf26c HTTP/1.1\r\nHost:api.openweathermap.org\r\n\r\n";
+//char Fetch[] = "GET HTTP/1.1\r\nHost:api.openweathermap.org\r\n\r\n";
 
+void LED_BlueOff(void){
+  PF2 = 0x00;
+}
 void doTCP(){
-    ESP8266_GetStatus();
-    if( ESP8266_MakeTCPConnection("openweathermap.org") ){ // open socket in server
-      LED_GreenOn();
-			 UART_printf("\n\r-----------\n\rSystem starting...\n\r");
-      ESP8266_SendTCP(Fetch);
+	while(1){
+		LED_BlueOff();
+    //ESP8266_GetStatus();
+	  LED_GreenOff();
+		if( ESP8266_MakeTCPConnection("172.20.10.4") ){ // open socket in server
+			LED_RedOn();
+			
+			 //UART_printf("\n\r-----------\n\rSystem starting...\n\r");
+			//DelayMs(500);
+      //ESP8266_SendTCP(Fetch);
 //			//HTTP_ServePage("AWESOME!!!!");
-			// ESP8266_SendClientResponse("AWESOME!!!!");
+			ESP8266_SendClientResponse("AWESOME!!!!");
+			
     }
-    ESP8266_CloseTCPConnection();
+    //ESP8266_CloseTCPConnection();
+		LED_RedOff();
+		LED_GreenOn();
+		
+//		  ST7735_SClear(1,0);
+//      ST7735_SDrawString(1,0,"Error: "); 
+//      ST7735_SClear(1, 7);
+
     while(Board_Input()==0){// wait for touch
     }; 
-    LED_GreenOff();
+    
+		LED_BlueOff();
     //LED_RedToggle();
-	 
+	}
 	}
 // 1) go to http://openweathermap.org/appid#use 
 // 2) Register on the Sign up page
@@ -456,7 +474,7 @@ int main(void){
 
 //  // TODO - Change the priorities later
 //  #if DEBUG == 1
-    //ST7735_SInit();
+   // ST7735_SInit();
   LED_Init();
 
 	//  #endif
