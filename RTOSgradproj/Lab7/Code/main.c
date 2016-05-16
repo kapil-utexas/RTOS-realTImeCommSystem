@@ -433,55 +433,43 @@ char Fetch[] = "GET /data/2.5/weather?q=Austin%20Texas&APPID=e0493977c4479cee13a
 void LED_BlueOff(void){
   PF2 = 0x00;
 }
+void LED_BlueOn(void){
+  PF2 = 0x04;
+}
+//server
+uint32_t sendPacketCount =0;
+char buffer[1024];
+
 void doTCP(){
 	while(1){
-		LED_BlueOff();
-    //ESP8266_GetStatus();
-	  LED_GreenOff();
-		if( ESP8266_MakeTCPConnection("172.20.10.4") ){ // open socket in server
+   // ESP8266_GetStatus();
+    LED_RedOff();
+					LED_GreenOff();
+ 
+			 
+		if(ESP8266_MakeTCPConnection("172.20.10.10")){ // open socket in server
+			
+			sendPacketCount++;
+			sprintf((char*)buffer, "I am the %d packet",sendPacketCount );
+			ESP8266_SendClientResponse(buffer);
+			//DelayMs(200);
 			LED_RedOn();
-			
-			 //UART_printf("\n\r-----------\n\rSystem starting...\n\r");
+			ESP8266SendCommand("AT+CIPCLOSE\r\n");  
 			//DelayMs(500);
-      //ESP8266_SendTCP(Fetch);
-//			//HTTP_ServePage("AWESOME!!!!");
-			ESP8266_SendClientResponse("AWESOME!!!!");
-			
-    }
-    //ESP8266_CloseTCPConnection();
-		LED_RedOff();
-		LED_GreenOn();
-		
-//		  ST7735_SClear(1,0);
-//      ST7735_SDrawString(1,0,"Error: "); 
-//      ST7735_SClear(1, 7);
+		  LED_RedOff();
+			LED_GreenOn(); 
+			}
+		    while(Board_Input()==0){// wait for touch
+				}; 
+}
+}
 
-    while(Board_Input()==0){// wait for touch
-    }; 
-    
-		LED_BlueOff();
-    //LED_RedToggle();
-	}
-	}
-// 1) go to http://openweathermap.org/appid#use 
-// 2) Register on the Sign up page
-// 3) get an API key (APPID) replace the 1234567890abcdef1234567890abcdef with your APPID
-
+//FOR SERVER
 int main(void){
   OS_Init();
-//  IR_Init();
-//  Ping_Init();
-
-//  // TODO - Change the priorities later
-//  #if DEBUG == 1
-   // ST7735_SInit();
   LED_Init();
-
-	//  #endif
 //  OS_MailBox_Init();
   OS_AddThread(&doTCP, 128, 1);
-	//  OS_AddThread(&ProcessSensors, 128, 1);  
-////  OS_AddThread(&Interpreter, 128, 1);
   OS_Launch(TIMESLICE);
   
   //DisableInterrupts();
@@ -492,6 +480,4 @@ int main(void){
   //printf("\n\r-----------\n\rSystem starting...\n\r");
  // ESP8266_Init(115200);  // connect to access point, set up as client
   //ESP8266_GetVersionNumber();
-	
-
-}
+	}

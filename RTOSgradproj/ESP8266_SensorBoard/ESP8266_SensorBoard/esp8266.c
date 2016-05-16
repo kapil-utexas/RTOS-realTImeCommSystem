@@ -56,9 +56,9 @@ ESP8266    TM4C123
 #include "esp8266.h"
 #include "UART.h"
 // Access point parameters
-#define SSID_NAME  "ValvanoAP"
-#define PASSKEY    "12345678"
-//#define SEC_TYPE   ESP8266_ENCRYPT_MODE_WPA2_PSK
+#define SSID_NAME  "Kapil's iPhone"
+#define PASSKEY    "stringtheory"
+#define SEC_TYPE   ESP8266_ENCRYPT_MODE_WPA2_PSK
 
 #define BUFFER_SIZE 1024
 #define MAXTRY 10
@@ -365,9 +365,9 @@ void ESP8266_Init(uint32_t baud){
 //  ESP8266_InitUART(115200,true);
   
 // step 2: AT+CWMODE=1 set wifi mode to client (not an access point)
-  if(ESP8266_SetWifiMode(ESP8266_WIFI_MODE_CLIENT)==0){ 
-    printf("SetWifiMode, could not set mode\n\r"); while(1){};
-  }
+//  if(ESP8266_SetWifiMode(ESP8266_WIFI_MODE_CLIENT)==0){ 
+//    printf("SetWifiMode, could not set mode\n\r"); while(1){};
+//  }
 // step 3: AT+CWJAP="ValvanoAP","12345678"  connect to access point 
   if(ESP8266_JoinAccessPoint(SSID_NAME,PASSKEY)==0){ 
     printf("JoinAccessPoint error, could not join AP\n\r"); while(1){};
@@ -376,10 +376,9 @@ void ESP8266_Init(uint32_t baud){
   if(ESP8266_GetIPAddress()==0){ // data streamed to UART0, OK
     printf("GetIPAddress error, could not get IP address\n\r"); while(1){};
   } 
-//// optional step: AT+CIPMUX==0 set mode to single socket 
-//  if(ESP8266_SetConnectionMux(0)==0){ // single socket
-//    printf("SetConnectionMux error, could not set connection mux\n\r"); while(1){};
-//  } 
+
+	
+	
 // optional step: AT+CWLAP check to see other AP in area
   if(ESP8266_ListAccessPoints()==0){ 
     printf("ListAccessPoints, could not list access points\n\r"); while(1){};
@@ -388,7 +387,18 @@ void ESP8266_Init(uint32_t baud){
   if(ESP8266_SetDataTransmissionMode(0)==0){ 
     printf("SetDataTransmissionMode, could not make connection\n\r"); while(1){};
   }
-  ESP8266_InputProcessingEnabled = false; // not a server
+	//CHANGE added this comment in client
+	//// optional step: AT+CIPMUX==0 set mode to single socket 
+  //if(ESP8266_SetConnectionMux(1)==0){ // single socket
+   // printf("SetConnectionMux error, could not set connection mux\n\r"); while(1){};
+  //} 
+	
+  ///CHANGE
+	//ESP8266_EnableServer(80);
+	
+	//CHANGE
+	ESP8266_InputProcessingEnabled = false; // not a server
+	//ESP8266_InputProcessingEnabled = true;
 }
 
 //----------ESP8266_Reset------------
@@ -536,7 +546,7 @@ int ESP8266_MakeTCPConnection(char *IPaddress){
   int try=MAXTRY;
   SearchStart("ok");
   while(try){
-    sprintf((char*)TXBuffer, "AT+CIPSTART=\"TCP\",\"%s\",80\r\n", IPaddress);
+    sprintf((char*)TXBuffer, "AT+CIPSTART=\"UDP\",\"%s\",11111\r\n", IPaddress);
     ESP8266SendCommand(TXBuffer);   // open and connect to a socket
     DelayMsSearching(8000);
     if(SearchFound) return 1; // success
@@ -768,4 +778,16 @@ void HTTP_ServePage(const char* body){
   ESP8266SendCommand(header);
   ESP8266SendCommand(contentLength);
   ESP8266SendCommand(body);    
+}
+
+void ESP8266_SendClientResponse(const char* body){
+  sprintf((char*)TXBuffer, "AT+CIPSEND=%d\r\n", strlen(body) );
+  ESP8266SendCommand((const char*)TXBuffer);
+	DelayMs(100);
+  sprintf((char*)TXBuffer, "%s\r\n", body );
+	ESP8266SendCommand((const char*)TXBuffer);
+DelayMs(300);
+	
+	
+printf("\n\r-----------\n\rPacket Sent...\n\r");
 }

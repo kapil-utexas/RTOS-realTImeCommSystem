@@ -357,47 +357,41 @@ void ESP8266_Init(uint32_t baud){
   ServerResponseSearchFinished = 0;
   EnableInterrupts();
 // step 1: AT+RST reset module
-  UART_printf("ESP8266 Initialization:\n\r");
+  printf("ESP8266 Initialization:\n\r");
   ESP8266_EchoResponse = true; // debugging
   if(ESP8266_Reset()==0){ 
-    UART_printf("Reset failure, could not reset\n\r"); while(1){};
+    printf("Reset failure, could not reset\n\r"); while(1){};
   }
- // ESP8266_ListAccessPoints();
+//  ESP8266SendCommand("AT+UART_CUR=115200,8,1,0,0\r\n");
+//  UART_InChar();
+
+//  ESP8266_InitUART(115200,true);
+  
 // step 2: AT+CWMODE=1 set wifi mode to client (not an access point)
 //  if(ESP8266_SetWifiMode(ESP8266_WIFI_MODE_CLIENT)==0){ 
-//    UART_printf("SetWifiMode, could not set mode\n\r"); while(1){};
+//    printf("SetWifiMode, could not set mode\n\r"); while(1){};
 //  }
-	  if(ESP8266_ListAccessPoints()==0){ 
-    UART_printf("ListAccessPoints, could not list access points\n\r"); while(1){};
-  }
-
 // step 3: AT+CWJAP="ValvanoAP","12345678"  connect to access point 
   if(ESP8266_JoinAccessPoint(SSID_NAME,PASSKEY)==0){ 
-    UART_printf("JoinAccessPoint error, could not join AP\n\r"); while(1){};
+    printf("JoinAccessPoint error, could not join AP\n\r"); while(1){};
   }
- 
-//// optional step: AT+CIPMUX==0 set mode to single socket 
-  if(ESP8266_SetConnectionMux(0)==0){ // single socket-0, web server - 1,
-    UART_printf("SetConnectionMux error, could not set connection mux\n\r"); while(1){};
-  } 
 // optional step: AT+CIFSR check to see our IP address
   if(ESP8266_GetIPAddress()==0){ // data streamed to UART0, OK
-    UART_printf("GetIPAddress error, could not get IP address\n\r"); while(1){};
+    printf("GetIPAddress error, could not get IP address\n\r"); while(1){};
+  } 
+//// optional step: AT+CIPMUX==0 set mode to single socket 
+//  if(ESP8266_SetConnectionMux(0)==0){ // single socket
+//    printf("SetConnectionMux error, could not set connection mux\n\r"); while(1){};
+//  } 
+// optional step: AT+CWLAP check to see other AP in area
+  if(ESP8266_ListAccessPoints()==0){ 
+    printf("ListAccessPoints, could not list access points\n\r"); while(1){};
   }
-	// optional step: AT+CWLAP check to see other AP in area
-//  if(ESP8266_ListAccessPoints()==0){ 
-//    UART_printf("ListAccessPoints, could not list access points\n\r"); while(1){};
-//  }
-	  //ESP8266_EnableServer(8080); //setup a server on port 80 
-	//DelayMs(1000);
-	//ESP8266SendCommand("AT+CWDHCP=1,1\r\n");
-	//DelayMs(1000);
-		//ESP8266SendCommand("AT+CIPSTA?\r\n");
-	//DelayMs(1000);
 // step 4: AT+CIPMODE=0 set mode to not data mode
   if(ESP8266_SetDataTransmissionMode(0)==0){ 
+    printf("SetDataTransmissionMode, could not make connection\n\r"); while(1){};
+  }
   ESP8266_InputProcessingEnabled = false; // not a server
-	}
 }
 //----------ESP8266_Reset------------
 // resets the esp8266 module
@@ -781,7 +775,7 @@ void HTTP_ServePage(const char* body){
 void ESP8266_SendClientResponse(const char* body){
   sprintf((char*)TXBuffer, "AT+CIPSEND=%d\r\n", strlen(body) );
   ESP8266SendCommand((const char*)TXBuffer);
-	DelayMs(100);
+	DelayMs(1000);
   sprintf((char*)TXBuffer, "%s\r\n", body );
 	ESP8266SendCommand((const char*)TXBuffer);
 DelayMs(300);

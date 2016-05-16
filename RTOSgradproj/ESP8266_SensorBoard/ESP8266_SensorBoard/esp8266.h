@@ -154,4 +154,9 @@ void ESP8266_EnableServer(uint16_t port);
 
 // serves a page via the ESP8266
 void HTTP_ServePage(const char* body);
+//send a http client response
+void ESP8266_SendClientResponse(const char* body);
+void ESP8266SendCommand(const char* inputString);
+void DelayMs(uint32_t n);
+
 #endif

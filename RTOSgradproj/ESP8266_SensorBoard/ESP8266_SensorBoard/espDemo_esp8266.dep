@@ -1,0 +1,34 @@
+Dependencies for Project 'espDemo', Target 'esp8266': (DO NOT MODIFY !)
+F (.\startup.s)(0x572CD345)(--cpu Cortex-M4 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123--list .\startup.lst --xref -o .\startup.o --depend .\startup.d)
+F (.\main.c)(0x5739E791)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\main.o --omf_browse .\main.crf --depend .\main.d)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C88A34)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C88A34)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C88A34)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C88A34)
+I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C88A34)
+I (..\../inc/tm4c123gh6pm.h)(0x57252EEF)
+I (pll.h)(0x572CD345)
+I (UART.h)(0x572CD345)
+I (esp8266.h)(0x57312BA4)
+I (LED.h)(0x572CD344)
+F (.\pll.c)(0x572CD345)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\pll.o --omf_browse .\pll.crf --depend .\pll.d)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C88A34)
+I (..\../inc/tm4c123gh6pm.h)(0x57252EEF)
+F (.\esp8266.c)(0x5739E7B9)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\esp8266.o --omf_browse .\esp8266.crf --depend .\esp8266.d)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C88A34)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C88A34)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C88A34)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C88A34)
+I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C88A34)
+I (..\../inc/tm4c123gh6pm.h)(0x57252EEF)
+I (esp8266.h)(0x57312BA4)
+I (UART.h)(0x572CD345)
+F (.\UART.c)(0x572CD345)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\uart.o --omf_browse .\uart.crf --depend .\uart.d)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C88A34)
+I (..\../inc/tm4c123gh6pm.h)(0x57252EEF)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C88A34)
+I (FIFO.h)(0x572CD344)
+I (UART.h)(0x572CD345)
+F (.\LED.c)(0x572CD344)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\led.o --omf_browse .\led.crf --depend .\led.d)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C88A34)
+I (..\../inc/tm4c123gh6pm.h)(0x57252EEF)
